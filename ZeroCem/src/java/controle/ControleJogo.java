@@ -35,7 +35,7 @@ public class ControleJogo extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-              HttpSession ses = request.getSession();
+             HttpSession ses = request.getSession();
              int numero = Integer.parseInt(request.getParameter("numero"));  
             ZeroCem jogo = (ZeroCem) ses.getAttribute("jogo");
             if (jogo == null) {
@@ -43,7 +43,7 @@ public class ControleJogo extends HttpServlet {
                 ses.setAttribute("jogo", jogo);
             }
             jogo.setNumeroUsuario(numero);
-            
+            jogo.contar();
            
             
             
@@ -58,7 +58,8 @@ public class ControleJogo extends HttpServlet {
             out.println("<body>");
             out.println(" " + jogo.getNumeroSorteado() + "</h1>");
             out.println(" " + jogo.getNumeroUsuario() + "</h1>");
-            out.println(" " + jogo.jogar() + "</h1>");
+            out.println("Tentativas:  " + jogo.getContador()+  "</h1>");
+            out.println(" " + jogo.jogar()+  "</h1>");
              out.println(" <form action=\"ControleJogo\" method=\"POST\">\n" +
 "            Numero: <input type=\"text\" name=\"numero\"/><br>\n" +
 "            <input type=\"submit\" name=\"bt\" value=\"Jogar\"/><br>\n" +
