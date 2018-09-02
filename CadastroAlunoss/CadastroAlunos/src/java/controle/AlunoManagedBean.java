@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.chart.Axis;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.ApplicationScoped;
@@ -18,6 +19,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import model.Aluno;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
 
 /**
  *
@@ -43,19 +47,20 @@ public class AlunoManagedBean {
     public Aluno getAluno() {
         return aluno;
     }
-   
+
     @PostConstruct
-    public void init(){
+    public void init() {
         atualizar();
+        createBarModel();
     }
-    
-     public void atualizar(){
+
+    public void atualizar() {
         listaAlunos = dao.getAllAlunos();
-        //createBarModel();
+        createBarModel();
     }
-    
+
     public List<Aluno> getAlunos() {
-       return listaAlunos;
+        return listaAlunos;
     }
 
     public void cadastrar() {
@@ -81,28 +86,61 @@ public class AlunoManagedBean {
         context.addMessage(null, new FacesMessage("Buscar", "Busca feita com sucesso"));
 
     }
-    
-    
+
+    public List<Aluno> buscarByName() {
+        return dao.buscarByName(this.getAluno());
+    }
+
     public void onRowEdit(RowEditEvent event) {
-       FacesContext context = FacesContext.getCurrentInstance();
+        FacesContext context = FacesContext.getCurrentInstance();
         //Aluno a = (Aluno) event.getObject();
-        boolean resultado = false;  
-        
+        boolean resultado = false;
+
         try {
             resultado = dao.updateAluno((Aluno) event.getObject());
-              context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Atualização", "Aluno atualizado com sucesso!"));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Atualização", "Aluno atualizado com sucesso!"));
         } catch (SQLException ex) {
             Logger.getLogger(AlunoManagedBean.class.getName()).log(Level.SEVERE, null, ex);
-             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Atualização", ex.getMessage()));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atualização", ex.getMessage()));
         }
-        
-      
-           
+
     }
-     
+
     public void onRowCancel(RowEditEvent event) {
         //FacesMessage msg = new FacesMessage("Edit Cancelled", ((Aluno) event.getObject()).getNome());
         //FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
+    public BarChartModel getBarModel() {
+        return barModel;
+    }
+
+    private void createBarModel() {
+        barModel = new BarChartModel();
+        ChartSeries notas = new ChartSeries();
+        notas.setLabel("Notas");
+        try {
+            notas.set("Nota 1", dao.mediaNota1());
+            notas.set("Nota 2", dao.mediaNota2());
+            notas.set("Nota 3", dao.mediaNota3());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AlunoManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        barModel.addSeries(notas);
+
+        barModel.setTitle("MÉDIA DE NOTAS DOS ALUNOS");
+        barModel.setLegendPosition("ne");
+
+        org.primefaces.model.chart.Axis xAxis = barModel.getAxis(AxisType.X);
+        //xAxis.setLabel("Gender");
+
+        org.primefaces.model.chart.Axis yAxis = barModel.getAxis(AxisType.Y);
+        yAxis.setLabel("Média");
+        yAxis.setMin(0);
+        yAxis.setMax(10);
+    }
+
+    private BarChartModel barModel;
 }

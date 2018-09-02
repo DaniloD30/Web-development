@@ -85,17 +85,79 @@ public class DAOAlunosDerby implements DAOAlunos {
     }
 
     public boolean updateAluno(Aluno aluno) throws SQLException {
-            
+
         PreparedStatement pstm = ConexaoDerby.getInstancia().getConn().prepareStatement("UPDATE DOD.NOTAS SET NOMEALUNO = ?, NOTA1 = ?,NOTA2 = ?,NOTA3 = ? WHERE NOMEALUNO = ?");
 
-            pstm.setString(1, aluno.getNome());
-            pstm.setDouble(2, aluno.getNota1());
-            pstm.setDouble(3, aluno.getNota2());
-            pstm.setDouble(4, aluno.getNota3());
-            pstm.setString(5, aluno.getNome());
-            return pstm.executeUpdate() == 1;
-            
-        
+        pstm.setString(1, aluno.getNome());
+        pstm.setDouble(2, aluno.getNota1());
+        pstm.setDouble(3, aluno.getNota2());
+        pstm.setDouble(4, aluno.getNota3());
+        pstm.setString(5, aluno.getNome());
+        return pstm.executeUpdate() == 1;
+
+    }
+
+    public double mediaNota1() throws SQLException {
+        double nota1 = 0;
+        int count = 0;
+        PreparedStatement pstm = ConexaoDerby.getInstancia().getConn().prepareStatement("SELECT NOTA1 FROM DOD.NOTAS ");
+        ResultSet rs = pstm.executeQuery();
+        while (rs.next()) {
+
+            Aluno p = new Aluno();
+            //p.setNome(rs.getString("NOMEALUNO"));
+            p.setNota1(rs.getDouble("NOTA1"));
+            nota1 += p.getNota1();
+            count++;
+            //p.setNota2(rs.getDouble("NOTA2"));
+            //p.setNota3(rs.getDouble("NOTA3"));
+
+            // lista.add(p);
+        }
+        return nota1/count;
+
+    }
+    
+      public double mediaNota2() throws SQLException {
+        double nota2 = 0;
+        int count = 0;
+        PreparedStatement pstm = ConexaoDerby.getInstancia().getConn().prepareStatement("SELECT NOTA2 FROM DOD.NOTAS ");
+        ResultSet rs = pstm.executeQuery();
+        while (rs.next()) {
+
+            Aluno p = new Aluno();
+            //p.setNome(rs.getString("NOMEALUNO"));
+            p.setNota2(rs.getDouble("NOTA2"));
+            nota2 += p.getNota2();
+            count++;
+            //p.setNota2(rs.getDouble("NOTA2"));
+            //p.setNota3(rs.getDouble("NOTA3"));
+
+            // lista.add(p);
+        }
+        return nota2/count;
+
+    }
+      
+        public double mediaNota3() throws SQLException {
+        double nota3 = 0;
+        int count = 0;
+        PreparedStatement pstm = ConexaoDerby.getInstancia().getConn().prepareStatement("SELECT NOTA3 FROM DOD.NOTAS ");
+        ResultSet rs = pstm.executeQuery();
+        while (rs.next()) {
+
+            Aluno p = new Aluno();
+            //p.setNome(rs.getString("NOMEALUNO"));
+            p.setNota3(rs.getDouble("NOTA3"));
+            nota3 += p.getNota3();
+            count++;
+            //p.setNota2(rs.getDouble("NOTA2"));
+            //p.setNota3(rs.getDouble("NOTA3"));
+
+            // lista.add(p);
+        }
+        return nota3/count;
+
     }
 
 }

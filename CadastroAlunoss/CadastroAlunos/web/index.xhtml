@@ -25,7 +25,7 @@
                 </h:panelGrid>  
                 <p:commandButton value="Cadastrar" actionListener="#{alunoManagedBean.cadastrar}" update="growl" />
 
-                <p:commandButton value="Atualizar Lista" actionListener="#{alunoManagedBean.atualizar()}" update="alunos" />
+                <p:commandButton value="Atualizar Lista" actionListener="#{alunoManagedBean.atualizar()}" update="alunos, grafico" />
             </p:panel> 
             <br></br><br></br><br></br>
 
@@ -72,12 +72,13 @@
                     <p:rowEditor />
                 </p:column>
             </p:dataTable>
+             <p:chart id="grafico" type="bar" model="#{alunoManagedBean.barModel}" style="width:500px;height: 600px"/>
         </h:form>
 
         <br></br><br></br><br></br>
 
 
-
+         
     </h:body>
 </html>
 
