@@ -25,13 +25,15 @@
                 </h:panelGrid>  
                 <p:commandButton value="Cadastrar" actionListener="#{alunoManagedBean.cadastrar}" update="growl" />
 
-                <p:commandButton value="Atualizar Lista" actionListener="#{alunoManagedBean.atualizar()}" update="alunos, grafico" />
+                <p:commandButton value="Atualizar Lista" actionListener="#{alunoManagedBean.atualizar()}" update="alunos, grafico, bubble" />
             </p:panel> 
             <br></br><br></br><br></br>
 
             <p:growl id="msgs" showDetail="true"/>
 
-            <p:dataTable id="alunos" var="aluno" value="#{alunoManagedBean.alunos}" editable="true" style="margin-bottom:20px">
+            <p:dataTable id="alunos" var="aluno" value="#{alunoManagedBean.alunos}" editable="true" style="margin-bottom:20px"
+                         emptyMessage="Nenhum aluno encontrado"
+                         filteredValue="#{alunoManagedBean.alunosFiltrados}">
                 <f:facet name="header">
                     ALUNOS
                 </f:facet>
@@ -39,7 +41,7 @@
                 <p:ajax event="rowEdit" listener="#{alunoManagedBean.onRowEdit}" update=":form:msgs" /> 
                 <p:ajax event="rowEditCancel" listener="#{alunoManagedBean.onRowCancel}" update=":form:msgs" /> 
 
-                <p:column headerText="Nome">
+                <p:column headerText="Nome" filterBy="#{aluno.nome}" filterMatchMode="contains">
                     <p:cellEditor>
                         <f:facet name="output"><h:outputText value="#{aluno.nome}" /></f:facet>
                         <f:facet name="input"><p:inputText value="#{aluno.nome}" style="width:100%" label="Year"/></f:facet>
@@ -73,6 +75,7 @@
                 </p:column>
             </p:dataTable>
              <p:chart id="grafico" type="bar" model="#{alunoManagedBean.barModel}" style="width:500px;height: 600px"/>
+             <p:chart id="bubble" type="bubble" model="#{alunoManagedBean.bubbleModel1}" />
         </h:form>
 
         <br></br><br></br><br></br>

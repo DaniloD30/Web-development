@@ -10,6 +10,7 @@ package model;
  * @author Aluno
  */
 public class Aluno {
+
     private double nota1;
     private double nota2;
     private double nota3;
@@ -46,6 +47,10 @@ public class Aluno {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
-    
+
+    public double getMedia() {
+
+        return  (getNota1() + getNota2() + getNota3()) / 3;
+    }
+
 }
